@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanFlow AI</title>
+  <meta name="description" content="UrbanFlow AI - Smart Urban Transport & Logistics">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/globals.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body data-theme="dark">
+  <!-- Ambient background elements for glassmorphism effect -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+    <!-- SVG injected via JS -->
+  </button>
+
+  <main id="login-view" class="glass-card">
+    <h1>UrbanFlow AI</h1>
+    <p class="subtitle">Smart Urban Transport & Logistics</p>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" class="glass-input" placeholder="Enter your name" autocomplete="name">
+        <span class="error-message">Name is required</span>
+      </div>
+
+      <div class="form-group">
+        <label for="mobileNumber">Mobile Number</label>
+        <div class="glass-input glass-input-wrapper">
+          <span class="country-code">+91</span>
+          <input type="tel" id="mobileNumber" placeholder="Enter mobile number" autocomplete="tel">
+        </div>
+        <span class="error-message">Valid mobile number is required</span>
+      </div>
+
+      <div class="form-group">
+        <label for="from">From Location</label>
+        <input type="text" id="from" class="glass-input" placeholder="e.g. Central Station" autocomplete="off">
+        <span class="error-message">Origin location is required</span>
+      </div>
+
+      <div class="form-group">
+        <label for="to">To Location</label>
+        <input type="text" id="to" class="glass-input" placeholder="e.g. Tech Hub Alpha" autocomplete="off">
+        <span class="error-message">Destination location is required</span>
+      </div>
+
+      <button type="submit" class="glass-button">
+        Next
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12l14 0" />
+          <path d="M13 18l6 -6" />
+          <path d="M13 6l6 6" />
+        </svg>
+      </button>
+    </form>
+  </main>
+
+  <!-- Traveler Dashboard -->
+  <section id="traveler-dashboard" class="dashboard-layout hidden fade-in">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">Traveler Dashboard</h1>
+      <p class="subtitle" id="dashboard-welcome">Welcome back</p>
+    </header>
+
+    <!-- AREA 1: Top (Weather & Traffic) -->
+    <div class="dashboard-top-area">
+      <div class="glass-card info-card">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><path d="M17.5 19C19.985 19 22 16.985 22 14.5C22 12.164 20.218 10.25 17.943 10.024C17.433 6.612 14.475 4 10.833 4C6.508 4 3 7.508 3 11.833C3 12.015 3.006 12.195 3.018 12.373C1.233 13.064 0 14.774 0 16.833C0 19.135 1.865 21 4.167 21H17.5Z" opacity="0.5"/><path d="M12 14V21M12 21L9 18M12 21L15 18"/></svg>
+          <h3>Weather Condition</h3>
+        </div>
+        <div class="card-body">
+          <div class="status-indicator status-good"></div>
+          <p class="status-text">Clear skies</p>
+          <p class="placeholder-text">Live weather data will be connected in future phases.</p>
+        </div>
+      </div>
+
+      <div class="glass-card info-card">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <h3>Traffic Condition</h3>
+        </div>
+        <div class="card-body">
+          <div class="status-indicator status-moderate"></div>
+          <p class="status-text">Moderate congestion</p>
+          <p class="placeholder-text">Real-time traffic API will be connected in future phases.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREA 2: Main / Middle (Best Route) -->
+    <div class="glass-card route-card">
+      <div class="card-header center">
+        <h2 class="route-title">BEST ROUTE</h2>
+      </div>
+      <div class="route-visualization">
+        <div class="route-point">
+          <div class="point-marker from-marker"></div>
+          <div class="point-label">From</div>
+          <div class="point-value" id="route-from-value">Origin</div>
+        </div>
+        
+        <div class="route-path">
+          <div class="animated-line"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="route-icon"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
+        </div>
+        
+        <div class="route-point">
+          <div class="point-marker to-marker"></div>
+          <div class="point-label">To</div>
+          <div class="point-value" id="route-to-value">Destination</div>
+        </div>
+      </div>
+      <p class="placeholder-text center-text mt-4">Intelligent route calculation map will appear here.</p>
+    </div>
+
+    <!-- AREA 3: Bottom (Future Content) -->
+    <div class="glass-card bottom-card">
+      <div class="placeholder-container">
+        <p class="placeholder-text">Additional traveler insights and features will be placed here.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logistics Dashboard (Phase 4) -->
+  <section id="logistics-dashboard" class="dashboard-layout hidden fade-in">
+    <header class="dashboard-header logistics-header">
+      <h1 class="dashboard-title">UrbanFlow AI <span class="accent-text">Logistics</span></h1>
+      <div class="destination-context glass-card">
+        <p class="subtitle">Destination</p>
+        <h2 id="logistics-dest-value" class="dest-value">...</h2>
+      </div>
+    </header>
+
+    <div class="hubs-section">
+      <div class="section-heading-container">
+        <h3 class="section-heading">Nearest Logistics Hubs</h3>
+        <p class="subtitle">Showing hubs relevant to your destination.</p>
+      </div>
+      
+      <div class="hubs-grid" id="hubs-container">
+        <!-- Hub cards injected via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Hub Details (Phase 5) -->
+  <section id="hub-details-view" class="dashboard-layout hidden fade-in">
+    <header class="dashboard-header logistics-header">
+      <div class="hub-details-top-bar">
+        <button id="back-to-hubs" class="glass-button back-button" aria-label="Back to Nearest Hubs">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5"/>
+            <path d="M11 18l-6-6"/>
+            <path d="M11 6l-6 6"/>
+          </svg>
+          Back to Hubs
+        </button>
+      </div>
+      <h1 class="dashboard-title">UrbanFlow AI</h1>
+      <p class="subtitle">Logistics Hub Details</p>
+      <div class="hub-context-bar">
+        <div class="context-chip glass-card">
+          <span class="context-label">Destination</span>
+          <span class="context-value" id="hub-detail-dest">...</span>
+        </div>
+        <div class="context-chip glass-card">
+          <span class="context-label">Selected Hub</span>
+          <span class="context-value" id="hub-detail-name">...</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="hub-details-grid">
+      <!-- LEFT COLUMN -->
+      <div class="hub-details-left">
+        <!-- Hub Summary Card -->
+        <div class="glass-card hub-summary-card" id="hub-summary-card">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Availability & Recommendation -->
+        <div class="glass-card hub-recommendation-card" id="hub-recommendation-card">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Comparison Context -->
+        <div class="glass-card hub-comparison-card" id="hub-comparison-card">
+          <h3 class="comparison-title">Hub Comparison</h3>
+          <p class="subtitle comparison-subtitle">Compare eligible hubs at a glance</p>
+          <div class="comparison-table-wrapper" id="hub-comparison-table">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="hub-details-right">
+        <!-- Route Visualization -->
+        <div class="glass-card hub-route-card" id="hub-route-card">
+          <div class="card-header center">
+            <h2 class="route-title">ROUTE / PATH</h2>
+          </div>
+          <div class="hub-route-visualization" id="hub-route-viz">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Estimated Delivery -->
+        <div class="glass-card hub-delivery-card" id="hub-delivery-card">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Select Hub Action -->
+        <div class="glass-card hub-select-card" id="hub-select-card">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hub Selection Confirmation Overlay -->
+  <div id="hub-confirm-overlay" class="modal-overlay hidden">
+    <div class="glass-card modal-card hub-confirm-modal">
+      <div class="confirm-icon-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="confirm-check-icon">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">Hub Selected</h2>
+      <p class="confirm-hub-name" id="confirm-hub-name">Hub A</p>
+      <p class="confirm-hub-delivery" id="confirm-hub-delivery">Estimated Delivery: 2 Days</p>
+      <p class="subtitle" style="margin-top:1.5rem;">Your logistics route has been confirmed for this prototype.</p>
+      <button id="confirm-done-btn" class="glass-button" style="margin-top:1.5rem;">Done</button>
+    </div>
+  </div>
+
+  <!-- Role Selection Modal Overlay -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="glass-card modal-card">
+      <h2 class="modal-title">What are you?</h2>
+      <p class="subtitle">Select your role to continue</p>
+      
+      <div class="role-options">
+        <button type="button" class="glass-button role-button" data-role="Traveler">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="M20 12h2" />
+            <path d="M2 12h2" />
+          </svg>
+          TRAVELER
+        </button>
+        
+        <button type="button" class="glass-button role-button" data-role="Logistics">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M19 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M8 12h8" />
+          </svg>
+          LOGISTICS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>
