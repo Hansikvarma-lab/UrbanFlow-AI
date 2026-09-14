@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMARTFLOW | Intelligent Transportation</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Emergency Banner -->
+  <div class="emergency-banner" id="emergencyBanner">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <i data-lucide="alert-triangle"></i>
+      <span>EMERGENCY CORRIDOR ACTIVE: EMR-042 → CITY HOSPITAL</span>
+    </div>
+    <div style="display: flex; gap: 2rem;">
+      <span>ROUTE: J01 → J02 → J03 → J04</span>
+      <span>PATH STATUS: SAFE</span>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay" id="sidebarOverlay" onclick="app.toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar glass-panel" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-title">SMARTFLOW</div>
+        <div class="brand-subtitle">INTELLIGENT TRANSPORTATION NETWORK</div>
+      </div>
+      
+      <nav class="sidebar-nav" id="sidebarNav">
+        <a class="nav-item active" data-page="overview" onclick="app.navigate('overview')">
+          <i data-lucide="layout-dashboard"></i> Overview
+        </a>
+        <a class="nav-item" data-page="traffic" onclick="app.navigate('traffic')">
+          <i data-lucide="map"></i> Live Traffic
+        </a>
+        <a class="nav-item" data-page="junctions" onclick="app.navigate('junctions')">
+          <i data-lucide="git-merge"></i> Junctions
+        </a>
+        <a class="nav-item" data-page="emergency" onclick="app.navigate('emergency')">
+          <i data-lucide="ambulance"></i> Emergency
+        </a>
+        <a class="nav-item" data-page="analytics" onclick="app.navigate('analytics')">
+          <i data-lucide="bar-chart-2"></i> Analytics
+        </a>
+        <a class="nav-item" data-page="ai" onclick="app.navigate('ai')">
+          <i data-lucide="brain-circuit"></i> AI Insights
+        </a>
+        <a class="nav-item" data-page="alerts" onclick="app.navigate('alerts')">
+          <i data-lucide="bell"></i> Alerts
+        </a>
+        <a class="nav-item" data-page="devices" onclick="app.navigate('devices')">
+          <i data-lucide="server"></i> Devices
+        </a>
+        <a class="nav-item" data-page="settings" onclick="app.navigate('settings')">
+          <i data-lucide="settings"></i> Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="small-label" style="margin-bottom: 0.5rem;">SYSTEM STATUS</div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px; font-weight: 500; color: var(--color-green);">
+          <div class="status-dot green"></div> All Systems Operational
+        </div>
+        <div style="margin-top: 1rem; font-size: 12px; color: var(--text-secondary);">
+          Version: v1.0.0 <br>
+          <span style="display:inline-block; margin-top:0.5rem; padding:2px 6px; background:var(--color-blue-bg); color:var(--color-blue); border-radius:4px; font-weight:600;">● DEMO MODE</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Top Header -->
+      <header class="top-header glass-panel">
+        <div class="header-left">
+          <div style="display:flex; align-items:center; gap: 1rem;">
+            <i data-lucide="menu" class="mobile-toggle" onclick="app.toggleSidebar()"></i>
+            <div>
+              <h1 class="header-title" id="headerTitle">SMART CITY OVERVIEW</h1>
+              <div class="header-desc" id="headerDesc">Real-time transportation network monitoring</div>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-status" id="globalSystemStatus">
+            <span style="display:flex; align-items:center; gap:0.5rem;"><div class="status-dot green"></div> SYSTEM OPERATIONAL</span>
+          </div>
+          <div class="time-display" id="currentTime">10:42:18 AM</div>
+          <button class="icon-btn" onclick="app.toggleTheme()" title="Switch theme" id="themeToggleBtn"><i data-lucide="moon"></i></button>
+          <button class="icon-btn" onclick="app.navigate('alerts')"><i data-lucide="bell"></i></button>
+          <div style="width:36px; height:36px; border-radius:50%; background:var(--color-blue-bg); color:var(--color-blue); display:flex; align-items:center; justify-content:center; font-weight:600;">JD</div>
+        </div>
+      </header>
+
+      <!-- Pages Container -->
+      <div id="pages">
+        
+        <!-- Overview Page -->
+        <div id="page-overview" class="page-container active">
+          <div class="grid-4" id="overview-kpis"></div>
+          
+          <div class="grid-layout">
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <div class="glass-card">
+                <h2 class="section-heading">LIVE TRAFFIC NETWORK</h2>
+                <div class="body-text" style="margin-bottom: 1rem;">Real-time junction activity</div>
+                <div class="schematic-map" id="main-map">
+                  <div class="map-road horizontal" style="top: 50%; left: 10%; right: 10%;"></div>
+                  <div class="map-road vertical" style="left: 40%; top: 10%; bottom: 10%;"></div>
+                </div>
+              </div>
+              
+              <div class="grid-2">
+                <div class="glass-card">
+                  <h2 class="section-heading">AI INSIGHTS</h2>
+                  <div class="status-badge blue" style="margin-bottom: 1rem;">AI SIMULATION</div>
+                  <div class="body-text" style="margin-bottom: 0.5rem;"><strong>Congestion Risk (J03): 89%</strong></div>
+                  <div class="body-text">Traffic expected to increase within 8 mins. Extend Northbound green phase by 12s.</div>
+                </div>
+                <div class="glass-card">
+                  <h2 class="section-heading">EMERGENCY NETWORK</h2>
+                  <div id="overview-emergency-status">
+                    <!-- Injected by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <div class="glass-card" style="flex: 1;">
+                <h2 class="section-heading">RECENT ALERTS</h2>
+                <div id="overview-alerts" style="display: flex; flex-direction: column;"></div>
+                <button class="btn btn-outline" style="width:100%; margin-top:1rem; justify-content:center;" onclick="app.navigate('alerts')">View All Alerts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Traffic (Signal Control) -->
+        <div id="page-traffic" class="page-container">
+          <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+              <h2 class="section-heading" style="margin: 0;">SIGNAL CONTROL INTERFACE</h2>
+              <div class="status-badge blue">SIMULATION MODE</div>
+            </div>
+            
+            <div class="intersection-diagram">
+              <div style="text-align:center; font-weight:600; margin-bottom:1rem; display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+                NORTH <i data-lucide="arrow-up"></i> <div class="status-badge green">32s</div>
+              </div>
+              
+              <div class="road-vertical"></div>
+              <div class="road-horizontal">
+                <div style="position:absolute; left:-80px; display:flex; align-items:center; gap:0.5rem; font-weight:600;">
+                  WEST <i data-lucide="arrow-left"></i> <div class="signal-light red"></div>
+                </div>
+                <div style="position:absolute; right:-80px; display:flex; align-items:center; gap:0.5rem; font-weight:600;">
+                  <div class="signal-light red"></div> <i data-lucide="arrow-right"></i> EAST
+                </div>
+              </div>
+              <div class="road-vertical"></div>
+              
+              <div style="text-align:center; font-weight:600; margin-top:1rem; display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+                <div class="signal-light red"></div> <i data-lucide="arrow-down"></i> SOUTH
+              </div>
+            </div>
+            
+            <div class="grid-3" style="margin-top: 3rem; text-align: center;">
+              <div>
+                <div class="small-label">CONTROL MODE</div>
+                <div style="font-size: 20px; font-weight: 600; margin-top: 0.5rem; color: var(--color-blue);">● ADAPTIVE</div>
+              </div>
+              <div>
+                <div class="small-label">TRAFFIC DENSITY</div>
+                <div style="font-size: 20px; font-weight: 600; margin-top: 0.5rem;">78%</div>
+              </div>
+              <div>
+                <div class="small-label">CURRENT PHASE</div>
+                <div style="font-size: 20px; font-weight: 600; margin-top: 0.5rem; color: var(--color-green);">NORTHBOUND</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Junctions Page -->
+        <div id="page-junctions" class="page-container">
+          <div class="glass-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+              <h2 class="section-heading" style="margin:0;">JUNCTION STATUS</h2>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button class="btn btn-outline" onclick="app.filterJunctions('ALL')">All</button>
+                <button class="btn btn-outline" style="color: var(--color-green); border-color: var(--color-green);" onclick="app.filterJunctions('NORMAL')">Normal</button>
+                <button class="btn btn-outline" style="color: var(--color-amber); border-color: var(--color-amber);" onclick="app.filterJunctions('MODERATE')">Moderate</button>
+                <button class="btn btn-outline" style="color: var(--color-red); border-color: var(--color-red);" onclick="app.filterJunctions('CONGESTED')">Congested</button>
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Junction ID</th>
+                    <th>Status</th>
+                    <th>Traffic Density</th>
+                    <th>Queue Length</th>
+                    <th>Wait Time</th>
+                    <th>Current Phase</th>
+                    <th>Mode</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="junctions-table-body">
+                  <!-- Injected by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Emergency Page -->
+        <div id="page-emergency" class="page-container">
+          <div class="grid-layout">
+            <div class="glass-card" id="emergency-main-panel">
+              <!-- Injected by JS -->
+            </div>
+            <div class="glass-card">
+              <h2 class="section-heading">EMERGENCY CORRIDOR SAFETY</h2>
+              <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:1.5rem;" id="emergency-safety-panel">
+                <!-- Injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div id="page-analytics" class="page-container">
+          <div class="status-badge blue" style="margin-bottom: 1.5rem;">DEMO DATA</div>
+          <div class="grid-2">
+            <div class="glass-card">
+              <h2 class="section-heading">TRAFFIC VOLUME</h2>
+              <div class="chart-container">
+                <canvas id="volumeChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-card">
+              <h2 class="section-heading">AVERAGE WAIT TIME (Before vs After)</h2>
+              <div class="chart-container">
+                <canvas id="waitChart"></canvas>
+              </div>
+              <div style="text-align: center; margin-top: 1rem; font-weight: 500;">
+                Potential improvement: <span style="color: var(--color-green);">43%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Insights Page -->
+        <div id="page-ai" class="page-container">
+          <div class="status-badge blue" style="margin-bottom: 1.5rem;">AI SIMULATION</div>
+          <div class="grid-2">
+            <div class="glass-card">
+              <div class="kpi-icon" style="margin-bottom:1rem;"><i data-lucide="brain-circuit"></i></div>
+              <h2 class="section-heading">CONGESTION PREDICTION</h2>
+              <div class="body-text" style="margin-bottom: 0.5rem;"><strong>Current Risk (J03): 89%</strong></div>
+              <div class="body-text" style="margin-bottom: 1rem;">Traffic expected to increase within the next 8 minutes based on historical patterns.</div>
+              <div style="padding: 1rem; background: var(--color-blue-bg); border-radius: var(--border-radius-sm); border-left: 4px solid var(--color-blue);">
+                <div class="small-label" style="color: var(--color-blue); margin-bottom:0.25rem;">RECOMMENDED ACTION</div>
+                <div style="font-weight: 500;">Extend Northbound green phase by approximately 12 seconds.</div>
+              </div>
+            </div>
+            <div class="glass-card">
+              <div class="kpi-icon" style="margin-bottom:1rem;"><i data-lucide="route"></i></div>
+              <h2 class="section-heading">EMERGENCY ROUTE OPTIMIZATION</h2>
+              <div class="body-text">Dynamic calculation of optimal green corridors for approaching emergency vehicles. Ready for next event.</div>
+            </div>
+            <div class="glass-card">
+              <div class="kpi-icon" style="margin-bottom:1rem;"><i data-lucide="git-pull-request"></i></div>
+              <h2 class="section-heading">JUNCTION LOAD BALANCING</h2>
+              <div class="body-text">Network-wide phase synchronization to maintain consistent flow across J01 to J04 corridor.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts Page -->
+        <div id="page-alerts" class="page-container">
+          <div class="glass-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+              <h2 class="section-heading" style="margin:0;">INCIDENT CENTER</h2>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="btn btn-outline" onclick="app.filterAlerts('ALL')">All</button>
+                <button class="btn btn-outline" style="color: var(--color-red); border-color: var(--color-red);" onclick="app.filterAlerts('CRITICAL')">Critical</button>
+                <button class="btn btn-outline" style="color: var(--color-amber); border-color: var(--color-amber);" onclick="app.filterAlerts('WARNING')">Warning</button>
+                <button class="btn btn-outline" style="color: var(--color-blue); border-color: var(--color-blue);" onclick="app.filterAlerts('INFO')">Info</button>
+              </div>
+            </div>
+            <div id="full-alerts-list" style="display:flex; flex-direction:column;"></div>
+          </div>
+        </div>
+
+        <!-- Devices Page -->
+        <div id="page-devices" class="page-container">
+          <div class="glass-card">
+            <h2 class="section-heading">HARDWARE MONITORING</h2>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Device Name</th>
+                    <th>Status</th>
+                    <th>Battery</th>
+                    <th>Network</th>
+                    <th>CPU Load</th>
+                    <th>Temp</th>
+                  </tr>
+                </thead>
+                <tbody id="devices-table-body">
+                  <!-- Injected by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="page-settings" class="page-container">
+          <div class="grid-2">
+            <div class="glass-card">
+              <h2 class="section-heading">SYSTEM SETTINGS</h2>
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div style="display:flex; justify-content:space-between; padding-bottom:1rem; border-bottom:1px solid var(--glass-border);">
+                  <span style="font-weight:500;">Network Configuration</span>
+                  <button class="btn btn-outline">Configure</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:1rem; border-bottom:1px solid var(--glass-border);">
+                  <span style="font-weight:500;">Appearance</span>
+                  <div style="display:flex; gap:0.5rem;">
+                    <button class="btn btn-outline" onclick="app.setTheme('system')">System</button>
+                    <button class="btn btn-outline" onclick="app.setTheme('light')">Light</button>
+                    <button class="btn btn-outline" onclick="app.setTheme('dark')">Dark</button>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:1rem; border-bottom:1px solid var(--glass-border);">
+                  <span style="font-weight:500;">Emergency Routing Rules</span>
+                  <button class="btn btn-outline">Edit</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:1rem; border-bottom:1px solid var(--glass-border);">
+                  <span style="font-weight:500;">Demo Mode Controls</span>
+                  <div style="display:flex; gap:0.5rem;">
+                    <button class="btn btn-outline" onclick="app.simulateDeviceIssue()">Simulate Device Issue</button>
+                    <button class="btn btn-outline" onclick="app.resetDemo()">Reset Demo</button>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="font-weight:500;">AI Optimization</span>
+                  <div class="status-badge green">ENABLED</div>
+                </div>
+              </div>
+            </div>
+            <div class="glass-card">
+              <h2 class="section-heading">ABOUT SMARTFLOW</h2>
+              <div class="body-text" style="margin-bottom:1rem;">
+                Command-center dashboard for an intelligent urban transportation system.
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div>
+                  <div class="small-label">PROJECT</div>
+                  <div style="font-weight:500;">SIH26222 Prototype</div>
+                </div>
+                <div>
+                  <div class="small-label">VERSION</div>
+                  <div style="font-weight:500;">1.0.0 (Phase 1 UI)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Junction Detail Drawer -->
+  <div class="drawer" id="junctionDrawer">
+    <div class="drawer-header">
+      <h2 class="section-heading" style="margin:0;" id="drawer-j-title">JUNCTION DETAIL</h2>
+      <button class="icon-btn" onclick="app.closeJunctionDetail()"><i data-lucide="x"></i></button>
+    </div>
+    <div class="drawer-body" id="drawer-j-body">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+
+  <!-- JS -->
+  <script src="js/mockData.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
